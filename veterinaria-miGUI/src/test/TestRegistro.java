@@ -1,10 +1,7 @@
 package test;
 
-import java.util.Date;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 import paneles.JPanelRegistro;
 import veterinaria.HistoriaClinica;
 
@@ -13,7 +10,7 @@ public class TestRegistro extends JPanel{
 	private static final long serialVersionUID = 1L;
 
 	private static void createAndShowGUI() {
-        //Create and set up the window.
+
         JFrame frame = new JFrame("Registro");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         

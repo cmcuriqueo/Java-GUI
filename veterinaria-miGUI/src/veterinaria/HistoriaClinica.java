@@ -14,11 +14,7 @@ public class HistoriaClinica {
 	}
 	
 	public void setRegistro(Registro registro) {
-		if(this.registro != null)
-			this.registro.add(registro);
-		else 
-			this.registro.add(registro);
-			
+		this.registro.add(registro);
 	}
 
 	public LinkedList<Registro> getRegistro() {
