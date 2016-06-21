@@ -23,6 +23,7 @@ public class TestRegistro extends JPanel{
 
         frame.pack();
         frame.setVisible(true);
+        frame.setResizable(false);
     }
     
     public static void main(String[] args) {

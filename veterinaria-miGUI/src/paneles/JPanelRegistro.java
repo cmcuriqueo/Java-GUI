@@ -1,6 +1,8 @@
 package paneles;
 
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -28,15 +30,15 @@ import veterinaria.Registro;
 public class JPanelRegistro extends JPanel 
 								implements ActionListener{
 
-	private static final long serialVersionUID = 1L;
-	
 	private final JButton nuevoRegistro;
 	private LinkedList<Registro> registros = null;
 	private final JTable tabla;
 	private JDialog frame;
-	
 	public JPanelRegistro(HistoriaClinica historiaClinica, JFrame contenedor) {
-		super();
+		super(new GridBagLayout());
+		
+		GridBagConstraints c = new GridBagConstraints();
+		
 		nuevoRegistro =  new JButton("Nuevo Registro");
 		nuevoRegistro.setVerticalTextPosition(AbstractButton.CENTER);
 		nuevoRegistro.setMnemonic(KeyEvent.VK_N);
@@ -45,12 +47,23 @@ public class JPanelRegistro extends JPanel
 		this.registros = historiaClinica.getRegistro();
 		
 		this.tabla = new JTable(new TablaRegistro());
+		
 		tabla.setPreferredScrollableViewportSize(new Dimension(700, 70));
+		
+		
 		JScrollPane scrollPane = new JScrollPane(tabla);
-			
-                this.add(scrollPane);
-			
-		this.add(nuevoRegistro);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 0;
+        this.add(scrollPane, c);
+        
+		c.fill = GridBagConstraints.CENTER;
+		c.weightx = 0.5;
+		c.gridx = 0;
+		c.gridy = 1;
+		this.add(nuevoRegistro, c);
+
 	}
     
 	
@@ -140,6 +153,7 @@ public class JPanelRegistro extends JPanel
 	    frame = new JDialog((JFrame)this.getParent().getParent().getParent(), "Nuevo Registro", true );
 		frame.setContentPane(new JPanelCrearRegistro());
         frame.pack();
+        frame.setResizable(false);
         frame.setVisible(true);
 	}
 	
@@ -155,39 +169,75 @@ public class JPanelRegistro extends JPanel
 		private static final long serialVersionUID = 1L;
 		
 		public JPanelCrearRegistro() {
-			super();
+			super(new GridBagLayout());
+			GridBagConstraints c = new GridBagConstraints();
+			
 			fecha = new JTextField(20);
 			peso = new JTextField(4);
 			medida = new JTextField(5);
 			
 			fechatomada = new Date();
-			fecha.setText((new SimpleDateFormat("dd-mm-YYYY").format(fechatomada)).toString());
+			fecha.setText((new SimpleDateFormat("dd-MM-YYYY").format(fechatomada)).toString());
 			fecha.setEditable(false);
 			agregar = new JButton("Agregar");
 			agregar.addActionListener(this);
 			JLabel fechat = new JLabel("Fecha");
-			add(fechat);
-			add(fecha);
 			JLabel pesot = new JLabel("Peso");
-			add(pesot);
-			add(peso);
 			JLabel medidat = new JLabel("Medida");
-			add(medidat);
-			add(medida);
-			add(agregar);
+			
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.gridx = 0;
+			c.gridy = 0;
+			add(fechat, c);
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.gridx = 1;
+			c.gridy = 0;
+			add(fecha, c);
+			
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.gridx = 0;
+			c.gridy = 1;
+			add(pesot, c);
+			
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.gridx = 1;
+			c.gridy = 1;
+			add(peso, c);
+			
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.gridx = 0;
+			c.gridy = 2;
+			add(medidat, c);
+			
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.gridx = 1;
+			c.gridy = 2;
+			add(medida, c);
+			
+			c.fill = GridBagConstraints.CENTER;
+			c.gridx = 1;
+			c.gridy = 3;
+			add(agregar, c);
+			
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
 				Registro nr = new Registro(fechatomada, Double.parseDouble(peso.getText()), Double.parseDouble(medida.getText()));
-				JPanelRegistro.this.registros.add(nr);
-				JPanelRegistro.this.frame.setVisible(false);
-				
-				/* recargo la tabla */
-				JPanelRegistro.this.tabla.setVisible(false);
-				JPanelRegistro.this.tabla.setVisible(true);
-				
+				if((nr.getPeso() > 0)
+						&& (nr.getPeso() < 100)
+						&& (nr.getMedida() > 0)
+				){
+					JPanelRegistro.this.registros.add(nr);
+					JPanelRegistro.this.frame.setVisible(false);
+					
+					/* recargo la tabla */
+					JPanelRegistro.this.tabla.setVisible(false);
+					JPanelRegistro.this.tabla.setVisible(true);
+				} else {
+					JOptionPane.showConfirmDialog(null, "Ingrese datos validos", "Error", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
+				}
 			} catch( java.lang.NumberFormatException e1){
 				if(peso.getText().isEmpty() || medida.getText().isEmpty()){
 					JOptionPane.showConfirmDialog(null, "Complete los campos", "Error", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
